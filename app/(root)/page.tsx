@@ -4,6 +4,7 @@ import React from "react";
 import { ROUTES } from "../consts/Routes";
 import LocalSearch from "@/components/search/LocalSearch";
 import Homefilter from "@/components/filter/Homefilter";
+import QuestionCard from "@/components/cards/QuestionCard";
 
 const questions = [
   {
@@ -14,7 +15,12 @@ const questions = [
       { _id: "1", name: "React" },
       { _id: "2", name: "JavaScript" },
     ],
-    author: { _id: "1", name: "John Doe" },
+    author: {
+      _id: "1",
+      name: "John Doe",
+      image:
+        "https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg",
+    },
     upvotes: 10,
     answers: 5,
     views: 100,
@@ -28,14 +34,18 @@ const questions = [
       { _id: "1", name: "JavaScript" },
       { _id: "2", name: "JavaScript" },
     ],
-    author: { _id: "1", name: "John Doe" },
+    author: {
+      _id: "1",
+      name: "John Doe",
+      image:
+        "https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg",
+    },
     upvotes: 10,
     answers: 5,
     views: 100,
-    createdAt: new Date(),
+    createdAt: new Date("2021-09-01"),
   },
 ];
-
 // q
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -64,6 +74,7 @@ const Home = async ({ searchParams }: SearchParams) => {
 
     return matchesQuery && matchesFilter;
   });
+
   return (
     <>
       <section className="flex w-full flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">
@@ -83,7 +94,7 @@ const Home = async ({ searchParams }: SearchParams) => {
       <Homefilter />
       <div className="mt-10 flex w-full flex-col gap-6">
         {filterQuestions.map((q) => (
-          <h1 key={q._id}>{q.title}</h1>
+          <QuestionCard key={q._id} question={q} />
         ))}
       </div>
     </>
