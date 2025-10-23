@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 import { ROUTES } from "../consts/Routes";
 import LocalSearch from "@/components/search/LocalSearch";
+import Homefilter from "@/components/filter/Homefilter";
 
 const questions = [
   {
@@ -40,11 +41,29 @@ interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 const Home = async ({ searchParams }: SearchParams) => {
-  const { query = "" } = await searchParams;
+  const { query = "", filter = "" } = await searchParams;
 
-  const filterQuestions = questions.filter((question) =>
-    question.title.toLowerCase().includes(query?.toLowerCase())
-  );
+  const filterQuestions = questions.filter((question) => {
+    const q = query?.toLowerCase?.() ?? "";
+    const f = filter?.toLowerCase?.() ?? "";
+    const filterTags = f
+      ? f
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+      : [];
+
+    const matchesQuery =
+      !q ||
+      question.title.toLowerCase().includes(q) ||
+      (question.description?.toLowerCase().includes(q) ?? false);
+
+    const matchesFilter =
+      filterTags.length === 0 ||
+      question.tags?.some((tag) => filterTags.includes(tag.name.toLowerCase()));
+
+    return matchesQuery && matchesFilter;
+  });
   return (
     <>
       <section className="flex w-full flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">
@@ -61,6 +80,7 @@ const Home = async ({ searchParams }: SearchParams) => {
           otherClasses={"flex-1"}
         />
       </section>
+      <Homefilter />
       <div className="mt-10 flex w-full flex-col gap-6">
         {filterQuestions.map((q) => (
           <h1 key={q._id}>{q.title}</h1>
